@@ -1,8 +1,7 @@
-
-
 .login-page {
   max-width: 350px;
   margin: 50px auto 0 auto;
+  /* margin: 0 auto; */
 }
 
 .login-form {
@@ -15,4 +14,7 @@
   margin-bottom: 10px;
 }
 
+input.ng-invalid.ng-touched {
+  border: 3px solid red;
+}
 
