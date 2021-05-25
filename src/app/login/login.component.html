@@ -2,54 +2,70 @@
   <mat-card-title>Login</mat-card-title>
   <mat-card-content>
 
-    <form class="login-form data-form" #loginForm="ngForm">
+    <form class="login-form data-form" #loginForm="ngForm" (ngSubmit)="login(loginForm, $event)">
 
       <mat-form-field>
 
         <input 
           matInput 
-          ngModel
+          [(ngModel)]="val.email"
           #email="ngModel"
+          name="Email"
+
           type="email" 
-          name="email"
           placeholder="Email"
           required
+          minlength="3"
+          email
+
         >
-        <mat-error > asd</mat-error>
-        
+          <!-- pattern="[a-z]+" -->
+        <mat-error *ngIf="email.errors?.required">The email is mandatory.</mat-error>
+        <mat-error *ngIf="email.errors?.minlength">
+          Your email must have minimum {{email.errors?.minlength.requiredLength}} chars,
+          but it only has {{email.errors?.minlength.actualLength}}.
+        </mat-error>
+        <mat-error *ngIf="email.errors?.email">This is not a valid email.</mat-error>
+
       </mat-form-field>
 
       <mat-form-field>
 
         <input 
           matInput 
-          ngModel 
+          [(ngModel)]="val.password"
           #password="ngModel"
-          type="password"
           name="password"
+
+          passwordStrength
+
+          type="password"
           placeholder="Password"
           required
         >
+        <mat-error *ngIf="password.errors?.required">The password is mandatory.</mat-error>
+        <mat-error *ngIf="password.errors?.passwordStrength">
+          Your password must have lower case, upper case and numeric characters.
+        </mat-error>
 
       </mat-form-field>
 
       <button 
         mat-raised-button 
         color="primary" 
-        (click)="login(loginForm)"
+        type="submit"
+        [disabled]="loginForm.invalid"
       >
         Login
       </button>
 
     </form>
-
-    <!-- <div>
-      {{loginForm.value | json}}
-    </div> -->
     
-    <div>
-      {{email.value + '' + password.value}}
-    </div>
+    <pre>
+      <!-- {{email.errors | json}} -->
+      <!-- {{email.value | json}} -->
+      {{loginForm.value | json}}
+    </pre>
 
   </mat-card-content>
 </mat-card>
