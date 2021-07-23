@@ -12,5 +12,51 @@ import {noop, of} from 'rxjs';
 })
 export class FileUploadComponent {
 
+  @Input() requiredFileType: string;
+
+  fileName = '';
+  fileUploadError = false;
+  uploadProgress: number;
+
+  constructor(private http: HttpClient) {
+
+  }
+
+  onFileSelected(event) {
+
+    if (!event) return;
+
+    const file: File = event.target.files[0];
+
+    this.fileName = file.name;
+
+    console.log(this.fileName);
+    this.fileUploadError = false;
+
+    // cr8 payload
+    const formData = new FormData();
+    formData.append("thumbnail", file);
+
+    this.http.post("/api/thumbnail-upload", formData, {
+      reportProgress: true,
+      observe: 'events'
+    })
+      .pipe(
+        catchError(error => {
+          this.fileUploadError = true;
+          return of(error);
+        }),
+        // after the upload is completed or throw an error
+        finalize(() => {
+          this.uploadProgress = null;
+        })
+      )
+      .subscribe(event => {
+        if (event.type == HttpEventType.UploadProgress) {
+          this.uploadProgress = Math.round(100 * (event.loaded / event.total));
+        }
+      });
+
+  }
 
 }

@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { CoursesService } from './../../services/courses.service';
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import { FormBuilder, Validators, ControlValueAccessor } from '@angular/forms';
 import { courseTitleValidator } from '../../validators/course-title.validator';
 import { filter } from 'rxjs/operators';
 
@@ -30,7 +30,8 @@ export class CreateCourseStep1Component implements OnInit {
     releaseAt: [new Date(), Validators.required],
     category: ['BEGINNER', Validators.required],
     downloadAllowed: [false, Validators.requiredTrue],
-    longDescription: ['', [Validators.required, Validators.minLength(3)]]
+    longDescription: ['', [Validators.required, Validators.minLength(3)]],
+    address: [null, Validators.required]
   });
 
   courseCategories$: Observable<CourseCategory>;
@@ -39,6 +40,11 @@ export class CreateCourseStep1Component implements OnInit {
     private fb: FormBuilder,
     private coursesService: CoursesService
   ) {}
+
+  // addressLine1: [null, [Validators.required]],
+  // addressLine2: [null, [Validators.required]],
+  // zipCode: [null, [Validators.required]],
+  // city: [null, [Validators.required]]
 
   ngOnInit() {
     this.courseCategories$ = this.coursesService.findCourseCategories();
