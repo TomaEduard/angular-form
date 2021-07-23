@@ -14,7 +14,58 @@
     <mat-error *ngIf="courseTitle.errors?.titleExists">
       This title is already being used.
     </mat-error>
-
   </mat-form-field>
 
+  <!-- courseCategories: 
+  <pre>{{courseCategories$ | async | json}}</pre> -->
+  
+  <mat-form-field>
+    <mat-select 
+      placeholder="Select category"
+      formControlName="category"
+    >
+      <ng-container *ngFor="let category of (courseCategories$ | async)">
+        <mat-option [value]="category.code">{{category.description}}</mat-option>
+      </ng-container>
+      
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input 
+      matInput
+      placeholder="Release date"
+      [matDatepicker]="releaseDatePicker"
+      formControlName="releaseAt"
+    >
+
+    <mat-datepicker-toggle 
+      [for]="releaseDatePicker"
+      matSuffix
+    ></mat-datepicker-toggle>
+
+    <mat-datepicker #releaseDatePicker></mat-datepicker>
+  </mat-form-field>
+
+  <mat-checkbox 
+    value="" 
+    color="primary"
+    formControlName="downloadAllowed"
+  >
+    Downloads Allowed
+  </mat-checkbox>
+
+  <mat-form-field appearance="outline">
+    <textarea
+      matInput
+      placeholder="Description"
+      formControlName="longDescription"
+    >
+
+    </textarea>
+  </mat-form-field>
+
+  <pre class="form-val">
+    {{form.value | json}}
+  </pre>
 </div>
