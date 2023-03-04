@@ -1,5 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { of } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { createPromoRangeValidator } from '../../validators/date-range.validator';
 
 
@@ -23,33 +25,59 @@ export class CreateCourseStep2Component implements OnInit {
   }, {
     // return an error when promoEnd > promoStart
     validators: [createPromoRangeValidator()],
-    updateOn: 'blur'
+    updateOn: 'change'
   });
 
   get price() {
-    return this.form.controls['price']; 
+    return this.form.get('price');
+  }
+
+  constructor(private fb: FormBuilder) {
+  }
+
+  set price(value: any) {
+    this.price.setValue(value.toString());
   }
 
   ngOnInit() {
+    this.price
+      .valueChanges
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        switchMap(search => this.callAPI(search)),
+      )
+      .subscribe(val => {
+        console.log('🎄', val);
+      })
+
+
+    // statusChange = daca este valid sau nu
     this.form.valueChanges
       .subscribe(val => {
+        console.log('🟢', val);
 
-        const priceControl = this.form.controls["price"];
-
-        if (val.courseType == 'free' && priceControl.enabled) {
+        if (val.courseType == 'free' && this.price.enabled) {
           // emitEvent will not trigger onother value and
           // prevent infinite loop
-          priceControl.disable({emitEvent: false});
-          priceControl.setValue(0);
-        } 
-        else if (val.courseType == 'premium' && priceControl.disabled) {
-          priceControl.enable({emitEvent:false});
+          this.price.disable({onlySelf: true, emitEvent: false});
+          this.price.setValue(0);
+        }
+        else if (val.courseType == 'premium' && this.price.disabled) {
+          this.price.enable({emitEvent:false});
         }
       })
   }
 
-  constructor(private fb: FormBuilder) {
 
+  test(e: any) {
+    console.log('😁😁😁', e);
   }
+
+  callAPI(e: any) {
+    console.log('😎', e);
+    return of(e);
+  }
+
 
 }

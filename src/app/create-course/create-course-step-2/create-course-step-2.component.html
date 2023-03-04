@@ -7,9 +7,11 @@
 
   </mat-radio-group>
 
-  <file-upload requiredFileType="image/png">
+  <file-upload requiredFileType="image/png"></file-upload>
 
-  </file-upload>
+  <button mat-raised-button (click)="price = '999'">
+    Set input to 999
+  </button>
 
   <mat-form-field>
     <input 
@@ -17,6 +19,7 @@
       type="number"
       formControlName="price"
       placeholder="Price"
+      (ngModelChange)="test($event)"
     >
     <mat-error *ngIf="price.errors?.required">
       This field is mandatory.

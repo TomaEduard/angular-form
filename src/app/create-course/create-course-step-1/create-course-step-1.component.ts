@@ -1,11 +1,11 @@
-import { Observable } from 'rxjs';
-import { CoursesService } from './../../services/courses.service';
-import {Component, OnInit} from '@angular/core';
-import { FormBuilder, Validators, ControlValueAccessor } from '@angular/forms';
-import { courseTitleValidator } from '../../validators/course-title.validator';
-import { filter } from 'rxjs/operators';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {Observable} from 'rxjs';
+import {filter, tap} from 'rxjs/operators';
+import {courseTitleValidator} from '../../validators/course-title.validator';
+import {CoursesService} from '../../services/courses.service';
 
-interface CourseCategory {
+export default interface CourseCategory {
   code: string;
   description: string;
 }
@@ -15,7 +15,7 @@ interface CourseCategory {
   templateUrl: './create-course-step-1.component.html',
   styleUrls: ['./create-course-step-1.component.scss']
 })
-export class CreateCourseStep1Component implements OnInit {
+export class CreateCourseStep1Component implements OnInit, AfterViewInit {
 
   form = this.fb.group({
     title: ['', {
@@ -38,37 +38,45 @@ export class CreateCourseStep1Component implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private coursesService: CoursesService
-  ) {}
+    public coursesService: CoursesService
+  ) {
+  }
 
   // addressLine1: [null, [Validators.required]],
   // addressLine2: [null, [Validators.required]],
   // zipCode: [null, [Validators.required]],
-  // city: [null, [Validators.required]]
 
+  // city: [null, [Validators.required]]
   ngOnInit() {
     this.courseCategories$ = this.coursesService.findCourseCategories();
-
+    console.log('🟢🟢',);
     const draft = localStorage.getItem("STEP_1");
-    if (draft) {
+    if (localStorage.getItem("STEP_1")) {
       this.form.setValue(JSON.parse(draft))
     }
 
     // set the value in LS if form receive a new valid value
     this.form.valueChanges
       .pipe(
-        // only if form is valid we will proces the data
+        tap(e => {
+          console.log('', e);
+          console.log('🟥', this.form.valid);
+        }),
+        // only if form is valid we will process the data
         filter(() => this.form.valid)
       )
       .subscribe(val => {
         localStorage.setItem("STEP_1", JSON.stringify(val))
       })
   }
-  
+
   get courseTitle() {
     // same result
     // return this.form.controls['title'];
     return this.form.get('title')
+  }
+
+  ngAfterViewInit(): void {
   }
 
 }

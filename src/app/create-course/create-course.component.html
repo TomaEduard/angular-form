@@ -1,25 +1,26 @@
 <div class="create-course-panel data-form">
-
   <h2 class="title">Create New Course</h2>
 
   <mat-horizontal-stepper
-    class="mat-elevation-z5" 
+    class="mat-elevation-z5"
     labelPosition="button"
     [linear]="false"
   >
-
     <!-- 1 -->
     <!-- need to specify providers in Componment for "errorMessage"-->
-    <mat-step fxLayout="column" [stepControl]="step1.form" errorMessage="Landing page in error">
-
+    <mat-step
+      fxLayout="column"
+      [stepControl]="step1.form"
+      errorMessage="Landing page in error"
+    >
       <ng-template matStepLabel>course landing page details</ng-template>
 
-      <create-course-step-1 #step1></create-course-step-1>    
-  
+      <create-course-step-1 #step1></create-course-step-1>
+
       <div class="stepper-buttons">
         <button mat-raised-button color="primary" matStepperNext>
-          Countinue to Step 2
-        </button> 
+          Continue to Step 2
+        </button>
       </div>
     </mat-step>
 
@@ -28,26 +29,14 @@
       <create-course-step-2></create-course-step-2>
       <ng-template matStepLabel>course pricing details</ng-template>
       <div class="stepper-buttons">
-        <button 
-          mat-raised-button 
-          color="primary" 
-          matStepperPrevious
-        >
+        <button mat-raised-button color="primary" matStepperPrevious>
           Back
-        </button> 
+        </button>
 
-        <button 
-          mat-raised-button 
-          color="primary" 
-          matStepperNext
-        >
+        <button mat-raised-button color="primary" matStepperNext>
           Continue to Step 3
-        </button> 
+        </button>
       </div>
     </mat-step>
-
   </mat-horizontal-stepper>
-
 </div>
-
-
